@@ -1,0 +1,19 @@
+%p= "「#{params[:word]}」で検索、 #{@paginated_posts.n_records} 件ヒット [#{@paginated_posts.start_offset}-#{@paginated_posts.end_offset}件を表示]#{params_to_description}"
+- unless @posts.empty?
+  -#%p.visible-xs
+    [
+    = link_to("著者で絞り込み", "#authors")
+    ]
+- if @paginated_posts.total_pages > 1
+  = paginate(@paginated_posts)
+%ul
+  - @paginated_posts.each do |post|
+    %li
+      %h4
+        = link_to("#{post.subject} - #{post._key}", link(post))
+      - if params["word"] && post.body
+        %p
+          = @snippet.execute(post.body).collect {|snippet| "...#{snippet}..."}.join(" / ").html_safe
+      %br
+- if @paginated_posts.total_pages > 1
+  = paginate(@paginated_posts)
